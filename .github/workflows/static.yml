@@ -1,7 +1,5 @@
-name: static analysis
-on:
-  pull_request:
-    paths: ['.github/workflows/*.yml', '.github/workflows/*.yaml']
+name: debug log
+on: push
 defaults:
   run:
    shell: bash
@@ -11,10 +9,18 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  lint:
+  log:
     runs-on: ubuntu-latest
     timeout-minutes: 5
     steps:
-     - uses: actions/checkout@v4
-     - run: |
-        docker run --rm -v "${pwd}:${pwd}" -w "${pwd}" rhysd/actionlint:latest
+      - run: |
+          set -x
+          echo "::group::環境変数表示"
+          date
+          echo "::debug::デバッグログです"
+          printenv
+          echo "::endgroup::"
+      - run: echo "::add-mask::${PASSWORD}"
+        env:
+            PASSWORD: superSecret
+      - run: echo "::notice::情報ログです" 
