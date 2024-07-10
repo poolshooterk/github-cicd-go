@@ -1,0 +1,28 @@
+name: Environments
+on:
+  workflow_dispatch: 
+    inputs:
+      environment-name:
+        type: environment
+        default: test
+        required: false
+        description: Environment name
+
+defaults:
+  run:
+   shell: bash
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  print:
+    runs-on: ubuntu-latest
+    environment: ${{ inputs.environment-name }}
+    env:
+      USERNAME: ${{ vars.USERNAME }}
+      PASSWORD: ${{ secrets.PASSWORD }}
+    steps:
+      - run: echo "${USERNAME}"
+      - run: echo "${PASSWORD}"
